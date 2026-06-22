@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  process.env.USTRIX_API_BASE_URL ?? 'http://192.168.57.22:3001';
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://192.168.57.22:3001';
 
 export type RegisterTenantPayload = {
   companyName: string;

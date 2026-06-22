@@ -1,11 +1,11 @@
 'use client';
 
-import { useActionState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import UstrixLogo from '@/components/brand/ustrix-logo';
 import {
-  completePaidRegistrationAction,
-  type PaymentSuccessFormState,
-} from '../actions';
+  completePaidRegistration,
+  type PaymentSuccessState,
+} from '../payment-api';
 import {
   alertErrorStyle,
   alertInfoStyle,
@@ -13,20 +13,25 @@ import {
   pageStyle,
 } from '@/app/register/styles';
 
-const initialState: PaymentSuccessFormState = { status: 'idle' };
+const initialState: PaymentSuccessState = { status: 'idle' };
 
-type PaymentSuccessClientProps = {
-  sessionId: string;
-};
+function readSessionIdFromUrl(): string {
+  if (typeof window === 'undefined') {
+    return '';
+  }
 
-export default function PaymentSuccessClient({
-  sessionId,
-}: PaymentSuccessClientProps) {
+  return new URLSearchParams(window.location.search).get('session_id')?.trim() ?? '';
+}
+
+export default function PaymentSuccessClient() {
   const startedRef = useRef(false);
-  const [state, formAction, isPending] = useActionState(
-    completePaidRegistrationAction,
-    initialState
-  );
+  const [sessionId, setSessionId] = useState('');
+  const [state, setState] = useState<PaymentSuccessState>(initialState);
+  const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    setSessionId(readSessionIdFromUrl());
+  }, []);
 
   useEffect(() => {
     if (startedRef.current || !sessionId) {
@@ -34,17 +39,33 @@ export default function PaymentSuccessClient({
     }
 
     startedRef.current = true;
+    setIsPending(true);
 
-    const formData = new FormData();
-    formData.set('sessionId', sessionId);
-    formAction(formData);
-  }, [sessionId, formAction]);
+    void completePaidRegistration(sessionId).then((result) => {
+      setState(result);
+      setIsPending(false);
 
-  useEffect(() => {
-    if (state.status === 'success') {
-      window.location.href = state.nextUrl;
-    }
-  }, [state]);
+      if (result.status === 'success') {
+        window.location.href = result.nextUrl;
+      }
+    });
+  }, [sessionId]);
+
+  if (!sessionId) {
+    return (
+      <main style={pageStyle}>
+        <section style={{ ...cardStyle, maxWidth: '560px', margin: '0 auto' }}>
+          <h1 style={{ margin: '0 0 12px 0', color: '#111827', textAlign: 'center' }}>
+            Payment session not found
+          </h1>
+          <p style={{ margin: 0, color: '#64748b', lineHeight: 1.6, textAlign: 'center' }}>
+            No Stripe checkout session was provided. Return to registration to
+            start again.
+          </p>
+        </section>
+      </main>
+    );
+  }
 
   const loadingLabel = isPending
     ? state.status === 'idle'

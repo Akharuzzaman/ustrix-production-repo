@@ -1,10 +1,10 @@
 'use client';
 
-import { useActionState, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import {
-  registerTenantAction,
+  submitRegistration,
   type RegisterFormState,
-} from './actions';
+} from './register-api';
 import { FreeDashboardAccess, PaidPlanCheckout } from './payment-step';
 import SubscriptionPlans from './subscription-plans';
 import {
@@ -36,10 +36,8 @@ import {
 const initialRegisterState: RegisterFormState = { status: 'idle' };
 
 export default function RegisterForm() {
-  const [state, formAction, isPending] = useActionState(
-    registerTenantAction,
-    initialRegisterState
-  );
+  const [state, setState] = useState<RegisterFormState>(initialRegisterState);
+  const [isPending, setIsPending] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanCode>('STARTER');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
@@ -51,7 +49,8 @@ export default function RegisterForm() {
     return <FreeDashboardAccess data={state.data} />;
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
 
@@ -65,12 +64,19 @@ export default function RegisterForm() {
     });
 
     if (hasFieldErrors(errors)) {
-      event.preventDefault();
       setFieldErrors(errors);
       return;
     }
 
     setFieldErrors({});
+    setIsPending(true);
+
+    try {
+      const result = await submitRegistration(formData);
+      setState(result);
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (
@@ -111,7 +117,7 @@ export default function RegisterForm() {
           dashboard after login.
         </p>
 
-        <form action={formAction} noValidate onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleSubmit}>
           {state.status === 'error' && (
             <div role="alert" style={alertErrorStyle}>
               {state.message}

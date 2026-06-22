@@ -1,13 +1,11 @@
 'use client';
 
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { RegisterTenantResponse } from '@/lib/ustrix-api';
 import {
-  createStripeCheckoutSessionAction,
-  freeDashboardAccessAction,
-  type CheckoutFormState,
-  type OnboardingFormState,
-} from './actions';
+  requestFreeDashboardAccess,
+  requestStripeCheckout,
+} from './register-api';
 import {
   alertErrorStyle,
   alertInfoStyle,
@@ -22,9 +20,6 @@ import {
   type PlanCode,
   type RegistrationFlowState,
 } from './types';
-
-const initialOnboardingState: OnboardingFormState = { status: 'idle' };
-const initialCheckoutState: CheckoutFormState = { status: 'idle' };
 
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
@@ -58,10 +53,8 @@ export function FreeDashboardAccess({
   data: RegisterTenantResponse;
 }) {
   const startedRef = useRef(false);
-  const [onboardingState, onboardingAction, isPending] = useActionState(
-    freeDashboardAccessAction,
-    initialOnboardingState
-  );
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isPending, setIsPending] = useState(true);
 
   useEffect(() => {
     if (startedRef.current) {
@@ -69,17 +62,26 @@ export function FreeDashboardAccess({
     }
     startedRef.current = true;
 
-    const formData = new FormData();
-    formData.set('tenantCode', data.tenant.tenantCode);
-    formData.set('email', data.adminUser.email);
-    onboardingAction(formData);
-  }, [data, onboardingAction]);
+    async function run() {
+      const result = await requestFreeDashboardAccess({
+        tenantCode: data.tenant.tenantCode,
+        email: data.adminUser.email,
+      });
 
-  useEffect(() => {
-    if (onboardingState.status === 'success') {
-      window.location.href = onboardingState.nextUrl;
+      if (result.status === 'success') {
+        window.location.href = result.nextUrl;
+        return;
+      }
+
+      if (result.status === 'error') {
+        setErrorMessage(result.message);
+      }
+
+      setIsPending(false);
     }
-  }, [onboardingState]);
+
+    void run();
+  }, [data]);
 
   return (
     <section style={{ ...cardStyle, maxWidth: '560px', margin: '0 auto' }}>
@@ -115,13 +117,13 @@ export function FreeDashboardAccess({
         </p>
       </div>
 
-      {onboardingState.status === 'error' && (
+      {errorMessage && (
         <div role="alert" style={alertErrorStyle}>
-          {onboardingState.message}
+          {errorMessage}
         </div>
       )}
 
-      {(isPending || onboardingState.status !== 'error') && (
+      {(isPending || !errorMessage) && (
         <div role="status" style={alertInfoStyle}>
           Preparing dashboard access…
         </div>
@@ -140,37 +142,36 @@ export function PaidPlanCheckout({
   const [flowState, setFlowState] =
     useState<RegistrationFlowState>('paymentRequired');
   const [errorMessage, setErrorMessage] = useState('');
-  const [checkoutState, checkoutAction, isPending] = useActionState(
-    createStripeCheckoutSessionAction,
-    initialCheckoutState
-  );
+  const [isPending, setIsPending] = useState(false);
 
   const plan = getPlanByCode(planCode);
   const amountDue = getPlanAmountCad(planCode);
   const isBusy = flowState === 'redirectingToStripe' || isPending;
 
-  function handleContinueToPayment() {
+  async function handleContinueToPayment() {
     setErrorMessage('');
     setFlowState('redirectingToStripe');
+    setIsPending(true);
 
-    const formData = new FormData();
-    formData.set('tenantCode', data.tenant.tenantCode);
-    formData.set('tenantNumber', data.tenantNumber);
-    formData.set('email', data.adminUser.email);
-    formData.set('planCode', planCode);
-    checkoutAction(formData);
-  }
+    const result = await requestStripeCheckout({
+      tenantCode: data.tenant.tenantCode,
+      tenantNumber: data.tenantNumber,
+      email: data.adminUser.email,
+      planCode,
+    });
 
-  useEffect(() => {
-    if (checkoutState.status === 'success') {
-      window.location.href = checkoutState.checkoutUrl;
+    setIsPending(false);
+
+    if (result.status === 'success') {
+      window.location.href = result.checkoutUrl;
+      return;
     }
 
-    if (checkoutState.status === 'error') {
+    if (result.status === 'error') {
       setFlowState('error');
-      setErrorMessage(checkoutState.message);
+      setErrorMessage(result.message);
     }
-  }, [checkoutState]);
+  }
 
   return (
     <section style={{ ...cardStyle, maxWidth: '640px', margin: '0 auto' }}>
@@ -216,7 +217,7 @@ export function PaidPlanCheckout({
 
       <button
         type="button"
-        onClick={handleContinueToPayment}
+        onClick={() => void handleContinueToPayment()}
         disabled={isBusy}
         style={primaryButtonStyle(isBusy)}
       >

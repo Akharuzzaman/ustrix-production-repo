@@ -1,31 +1,29 @@
-'use server';
-
 import {
   createSsoToken,
-  createStripeCheckoutSession,
   upgradeSubscription,
   verifyStripeCheckoutSession,
   UstrixApiError,
 } from '@/lib/ustrix-api';
 import { VALID_PLAN_CODES, type PlanCode } from '@/app/register/types';
 
-export type PaymentSuccessFormState =
+export type PaymentSuccessState =
   | { status: 'idle' }
   | { status: 'error'; message: string }
   | { status: 'success'; nextUrl: string };
 
-export async function completePaidRegistrationAction(
-  _prevState: PaymentSuccessFormState,
-  formData: FormData
-): Promise<PaymentSuccessFormState> {
-  const sessionId = String(formData.get('sessionId') ?? '').trim();
+export async function completePaidRegistration(
+  sessionId: string
+): Promise<PaymentSuccessState> {
+  const trimmedSessionId = sessionId.trim();
 
-  if (!sessionId) {
+  if (!trimmedSessionId) {
     return { status: 'error', message: 'Missing Stripe checkout session.' };
   }
 
   try {
-    const verification = await verifyStripeCheckoutSession({ sessionId });
+    const verification = await verifyStripeCheckoutSession({
+      sessionId: trimmedSessionId,
+    });
 
     if (!verification.paid) {
       return {

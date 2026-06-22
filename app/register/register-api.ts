@@ -1,5 +1,3 @@
-'use server';
-
 import {
   createSsoToken,
   createStripeCheckoutSession,
@@ -8,8 +6,8 @@ import {
   type RegisterTenantResponse,
   UstrixApiError,
 } from '@/lib/ustrix-api';
-import { VALID_PLAN_CODES, type PlanCode } from './types';
 import { isValidEmailFormat } from '@/lib/email-validation';
+import { VALID_PLAN_CODES, type PlanCode } from './types';
 import { PASSWORD_REGEX } from './validation';
 
 export type RegisterFormState =
@@ -27,8 +25,7 @@ export type CheckoutFormState =
   | { status: 'error'; message: string }
   | { status: 'success'; checkoutUrl: string };
 
-export async function registerTenantAction(
-  _prevState: RegisterFormState,
+export async function submitRegistration(
   formData: FormData
 ): Promise<RegisterFormState> {
   const payload: RegisterTenantPayload = {
@@ -81,12 +78,12 @@ export async function registerTenantAction(
   }
 }
 
-export async function freeDashboardAccessAction(
-  _prevState: OnboardingFormState,
-  formData: FormData
-): Promise<OnboardingFormState> {
-  const tenantCode = String(formData.get('tenantCode') ?? '').trim();
-  const email = String(formData.get('email') ?? '').trim();
+export async function requestFreeDashboardAccess(input: {
+  tenantCode: string;
+  email: string;
+}): Promise<OnboardingFormState> {
+  const tenantCode = input.tenantCode.trim();
+  const email = input.email.trim();
 
   if (!tenantCode || !email) {
     return {
@@ -108,14 +105,16 @@ export async function freeDashboardAccessAction(
   }
 }
 
-export async function createStripeCheckoutSessionAction(
-  _prevState: CheckoutFormState,
-  formData: FormData
-): Promise<CheckoutFormState> {
-  const tenantCode = String(formData.get('tenantCode') ?? '').trim();
-  const tenantNumber = String(formData.get('tenantNumber') ?? '').trim();
-  const email = String(formData.get('email') ?? '').trim();
-  const planCode = String(formData.get('planCode') ?? '').trim() as PlanCode;
+export async function requestStripeCheckout(input: {
+  tenantCode: string;
+  tenantNumber: string;
+  email: string;
+  planCode: PlanCode;
+}): Promise<CheckoutFormState> {
+  const tenantCode = input.tenantCode.trim();
+  const tenantNumber = input.tenantNumber.trim();
+  const email = input.email.trim();
+  const planCode = input.planCode;
 
   if (!tenantCode || !tenantNumber || !email || !planCode) {
     return {
