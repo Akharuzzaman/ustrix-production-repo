@@ -115,7 +115,7 @@ export const HOW_IT_WORKS = [
   {
     step: 5,
     title: 'Access Dashboard',
-    text: 'Enter the Oracle APEX operational workspace.',
+    text: 'Access your secure operational dashboard.',
     icon: 'dashboard' as const,
   },
   {

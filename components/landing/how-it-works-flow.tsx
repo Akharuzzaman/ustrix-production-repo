@@ -1,8 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { HOW_IT_WORKS } from './data';
 import { useLanding } from './landing-provider';
-import LandingIcon from './landing-icons';
 import styles from './landing.module.css';
 
 function ArrowRight() {
@@ -26,7 +26,15 @@ function ArrowDown() {
 function StepCard({ step }: { step: (typeof HOW_IT_WORKS)[number] }) {
   return (
     <div className={styles.flowCrystalCard}>
-      <LandingIcon name={step.icon} size={24} />
+      <div className={styles.flowStepIcon} aria-hidden="true">
+        <Image
+          src="/icon.svg"
+          alt=""
+          width={28}
+          height={28}
+          className={styles.flowStepIconImage}
+        />
+      </div>
       <span className={styles.flowNum}>{step.step}</span>
       <h3 className={styles.flowTitle}>{step.title}</h3>
       <p className={styles.flowText}>{step.text}</p>

@@ -13,9 +13,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'USTRIX',
+  metadataBase: new URL('https://www.ustrix.ca'),
+  title: 'USTRIX | Connected Marketplace Platform',
   description:
-    'USTRIX procurement, selling, lead generation, subscription, and payments platform.',
+    'USTRIX is a connected marketplace platform for buyers, sellers, agents, subscriptions, payments, service orders, and dashboard operations.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  openGraph: {
+    siteName: 'USTRIX',
+    url: 'https://www.ustrix.ca',
+    title: 'USTRIX | Connected Marketplace Platform',
+    description:
+      'USTRIX is a connected marketplace platform for buyers, sellers, agents, subscriptions, payments, service orders, and dashboard operations.',
+  },
 };
 
 export default function RootLayout({

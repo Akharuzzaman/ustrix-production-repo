@@ -18,13 +18,13 @@ import CookieBanner from './cookie-banner';
 import { CrystalCard } from './crystal-frame';
 import EnterpriseAudienceCards from './enterprise-audience-cards';
 import EnterpriseHeroVisual from './enterprise-hero-visual';
+import BusinessEcosystemSection from './business-ecosystem-section';
 import HowItWorksFlow from './how-it-works-flow';
 import LiveJobBoard from './live-job-board';
 import SiteHeader from './site-header';
 import LandingIcon from './landing-icons';
 import TrustIcon from './trust-icon';
 import UtilityBar from './utility-bar';
-import UstrixEcosystem from './ustrix-ecosystem';
 import {
   formatPlanPrice,
   PLAN_PRICES,
@@ -103,8 +103,9 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <BusinessEcosystemSection />
+
       <EnterpriseAudienceCards />
-      <UstrixEcosystem />
 
       {/* Trust */}
       <section className={styles.section} aria-labelledby="trust-title">

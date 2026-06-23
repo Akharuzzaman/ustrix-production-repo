@@ -117,9 +117,9 @@ export const translations: Record<LanguageCode, TranslationKeys> = {
     audienceAgent: 'Agent Channel',
     audienceAgentText:
       'Approved partners support qualified lead flow and ecosystem growth while confidential details remain protected.',
-    ecosystemTitle: 'The USTRIX Connected Ecosystem',
+    ecosystemTitle: 'Business Ecosystem',
     ecosystemSubtitle:
-      'A secure digital marketplace where buyers, sellers, and approved agents interact through structured workflows, payment settlement, and operational visibility.',
+      'A connected marketplace where buyers post requirements, sellers deliver goods or services, and approved agents guide transactions through the USTRIX platform core.',
     ecosystemBuyer: 'Buyer',
     ecosystemBuyerText:
       'Requests goods, services, quotations, and fulfillment tracking.',
@@ -166,7 +166,7 @@ export const translations: Record<LanguageCode, TranslationKeys> = {
       'After subscription, buyers, sellers, and approved partners access the secure dashboard.',
     dashboardTitle: 'Admin dashboard overview',
     dashboardLead:
-      'Operational control continues in the secure Oracle APEX dashboard.',
+      'Operational control continues in the secure dashboard.',
     dashboardCta: 'Go to Dashboard Sign In',
     chartPlaceholder: 'Recent Activity & Top Services — chart preview',
     testimonialsTitle: 'What customers say',
@@ -227,9 +227,9 @@ export const translations: Record<LanguageCode, TranslationKeys> = {
     audienceAgent: 'Canal agents',
     audienceAgentText:
       'Les partenaires approuvés soutiennent les prospects qualifiés et la croissance de l’écosystème, les détails confidentiels restant protégés.',
-    ecosystemTitle: 'L’écosystème connecté USTRIX',
+    ecosystemTitle: 'Écosystème commercial',
     ecosystemSubtitle:
-      'Un marché numérique sécurisé où acheteurs, vendeurs et agents approuvés interagissent par des flux structurés, le règlement des paiements et la visibilité opérationnelle.',
+      'Un marché connecté où les acheteurs publient leurs besoins, les vendeurs livrent biens ou services, et les agents approuvés guident les transactions via le cœur de plateforme USTRIX.',
     ecosystemBuyer: 'Acheteur',
     ecosystemBuyerText:
       'Demande des biens, services, devis et suivi d’exécution.',
@@ -276,7 +276,7 @@ export const translations: Record<LanguageCode, TranslationKeys> = {
       'Après l’abonnement, les acheteurs, vendeurs et partenaires approuvés accèdent au tableau de bord sécurisé.',
     dashboardTitle: 'Aperçu du tableau de bord admin',
     dashboardLead:
-      'Le contrôle opérationnel se poursuit dans le tableau de bord Oracle APEX sécurisé.',
+      'Le contrôle opérationnel se poursuit dans le tableau de bord sécurisé.',
     dashboardCta: 'Connexion au tableau de bord',
     chartPlaceholder:
       'Activité récente et services principaux — aperçu graphique',
