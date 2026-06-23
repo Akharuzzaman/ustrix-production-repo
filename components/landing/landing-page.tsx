@@ -6,10 +6,7 @@ import UstrixLogo from '@/components/brand/ustrix-logo';
 import {
   CAPABILITIES,
   DASHBOARD_METRICS,
-  PLANS,
   SERVICE_AREAS,
-  SUBSCRIPTION_ROLE_FEATURES,
-  SUBSCRIPTION_ROLES,
   TESTIMONIALS,
   USER_TYPES,
 } from './data';
@@ -29,14 +26,11 @@ import SiteHeader from './site-header';
 import LandingIcon from './landing-icons';
 import TrustIcon from './trust-icon';
 import UtilityBar from './utility-bar';
-import {
-  formatPlanPrice,
-  PLAN_PRICES,
-  type BillingCycle,
-} from './pricing';
+import SubscriptionPlansSection from './subscription-plans-section';
+import { type BillingCycle } from './pricing';
 
 export default function LandingPage() {
-  const { t, currency } = useLanding();
+  const { t } = useLanding();
   const [billing, setBilling] = useState<BillingCycle>('monthly');
 
   const trustItems = [
@@ -274,68 +268,8 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <ul className={styles.subscriptionRoleGrid}>
-            {SUBSCRIPTION_ROLES.map((role) => {
-              const accentClass =
-                role.accent === 'buyer'
-                  ? styles.subscriptionRoleBuyer
-                  : role.accent === 'seller'
-                    ? styles.subscriptionRoleSeller
-                    : styles.subscriptionRoleAgent;
+          <SubscriptionPlansSection billing={billing} />
 
-              return (
-                <li
-                  key={role.id}
-                  className={`${styles.subscriptionRoleCard} ${accentClass}`}
-                >
-                <h3 className={styles.subscriptionRoleTitle}>{role.title}</h3>
-                <ul className={styles.subscriptionRoleFeatures}>
-                  {SUBSCRIPTION_ROLE_FEATURES.map((feature) => (
-                    <li key={`${role.id}-${feature}`}>{feature}</li>
-                  ))}
-                </ul>
-                <Link href={role.href} className={styles.subscriptionRoleCta}>
-                  {role.cta}
-                </Link>
-              </li>
-              );
-            })}
-          </ul>
-
-          <ul className={styles.planGrid}>
-            {PLANS.map((plan) => {
-              const prices = PLAN_PRICES[currency][plan.code];
-              const amount =
-                billing === 'monthly' ? prices.monthly : prices.yearly;
-              return (
-                <li
-                  key={plan.code}
-                  className={`${styles.planCard} ${
-                    plan.recommended ? styles.planRecommended : ''
-                  }`}
-                >
-                  {plan.recommended && (
-                    <span className={styles.badge}>{t.recommended}</span>
-                  )}
-                  <h3 className={styles.cardTitle}>{plan.name}</h3>
-                  <p className={styles.planPrice}>
-                    {formatPlanPrice(currency, amount, billing)}
-                  </p>
-                  <ul className={styles.planFeatures}>
-                    {plan.features.map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
-                  <Link
-                    href={`/register?plan=${plan.query}`}
-                    className={styles.btnPrimary}
-                  >
-                    {plan.cta}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
           <p
             className={styles.sectionLead}
             style={{ textAlign: 'center', marginTop: 28, marginBottom: 0 }}

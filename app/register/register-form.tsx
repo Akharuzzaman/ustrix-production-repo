@@ -1,36 +1,40 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
+import SubscriptionCheckoutForm from '@/components/subscription/subscription-checkout-form';
+import SubscriptionCheckoutSummary from '@/components/subscription/subscription-checkout-summary';
+import { parseSubscriptionSearchParams } from '@/components/subscription/build-register-href';
+import {
+  CHOOSE_PLAN_HEADING,
+  OWNER_TYPE_REQUIRED_MESSAGE,
+  ROLE_REQUIRED_MESSAGE,
+} from '@/components/subscription/constants';
+import { resolvePlanForOwnerType } from '@/components/subscription/plan-matrix';
+import SubscriptionOwnerTypeSelector from '@/components/subscription/subscription-owner-type-selector';
+import SubscriptionRoleSelector from '@/components/subscription/subscription-role-selector';
+import type { OwnerType, SubscriptionRole } from '@/components/subscription/types';
 import {
   submitRegistration,
   type RegisterFormState,
 } from './register-api';
 import { FreeDashboardAccess, PaidPlanCheckout } from './payment-step';
 import SubscriptionPlans from './subscription-plans';
-import {
-  ADMIN_EMAIL_HELPER,
-  isPaidPlan,
-  PAYMENT_NOTE,
-  type PlanCode,
-} from './types';
+import { isPaidPlan, type PlanCode } from './types';
 import {
   alertErrorStyle,
   cardStyle,
+  checkoutPanelStyle,
+  checkoutSubmitButtonStyle,
+  compactHeadingStyle,
   fieldErrorStyle,
-  fieldStyle,
-  formCardStyle,
-  getInputStyle,
-  labelStyle,
   layoutGridStyle,
-  primaryButtonStyle,
-  sectionHintStyle,
-  valuePropStyle,
+  sectionDividerStyle,
 } from './styles';
 import {
   hasFieldErrors,
-  PASSWORD_HELPER_TEXT,
-  validateRegistrationForm,
-  type FieldErrors,
+  readCheckoutFormValues,
+  validateSubscriptionCheckoutForm,
+  type CheckoutFieldErrors,
 } from './validation';
 
 const initialRegisterState: RegisterFormState = { status: 'idle' };
@@ -38,12 +42,77 @@ const initialRegisterState: RegisterFormState = { status: 'idle' };
 export default function RegisterForm() {
   const [state, setState] = useState<RegisterFormState>(initialRegisterState);
   const [isPending, setIsPending] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<SubscriptionRole | null>(null);
+  const [ownerType, setOwnerType] = useState<OwnerType | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<PlanCode>('STARTER');
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [fieldErrors, setFieldErrors] = useState<CheckoutFieldErrors>({});
+  const [flowError, setFlowError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const parsed = parseSubscriptionSearchParams(params);
+
+    if (parsed.ownerType) {
+      setOwnerType(parsed.ownerType);
+    }
+
+    if (parsed.role) {
+      setSelectedRole(parsed.role);
+    }
+
+    if (parsed.plan) {
+      setSelectedPlan(
+        resolvePlanForOwnerType(parsed.ownerType, parsed.plan)
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!ownerType) {
+      return;
+    }
+    setSelectedPlan((current) => resolvePlanForOwnerType(ownerType, current));
+  }, [ownerType]);
+
+  useEffect(() => {
+    if (!ownerType && !selectedRole) {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (ownerType) {
+      params.set('ownerType', ownerType);
+    } else {
+      params.delete('ownerType');
+    }
+
+    if (selectedRole) {
+      params.set('role', selectedRole);
+    } else {
+      params.delete('role');
+    }
+
+    params.set('plan', selectedPlan);
+
+    const nextQuery = params.toString();
+    const nextUrl = nextQuery ? `/register?${nextQuery}` : '/register';
+    window.history.replaceState(null, '', nextUrl);
+  }, [selectedRole, ownerType, selectedPlan]);
+
+  const canSpecifyOwnerType = Boolean(selectedRole);
+  const canChoosePlan = Boolean(selectedRole && ownerType);
+  const canProceed = canChoosePlan;
 
   if (state.status === 'success') {
     if (isPaidPlan(selectedPlan)) {
-      return <PaidPlanCheckout data={state.data} planCode={selectedPlan} />;
+      return (
+        <PaidPlanCheckout
+          data={state.data}
+          planCode={selectedPlan}
+          subscriptionRole={selectedRole}
+        />
+      );
     }
 
     return <FreeDashboardAccess data={state.data} />;
@@ -51,17 +120,24 @@ export default function RegisterForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!selectedRole) {
+      setFlowError(ROLE_REQUIRED_MESSAGE);
+      return;
+    }
+
+    if (!ownerType) {
+      setFlowError(OWNER_TYPE_REQUIRED_MESSAGE);
+      return;
+    }
+
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const errors = validateRegistrationForm({
-      companyName: String(formData.get('companyName') ?? ''),
-      firstName: String(formData.get('firstName') ?? ''),
-      lastName: String(formData.get('lastName') ?? ''),
-      email: String(formData.get('email') ?? ''),
-      password: String(formData.get('password') ?? ''),
-      confirmPassword: String(formData.get('confirmPassword') ?? ''),
-    });
+    const errors = validateSubscriptionCheckoutForm(
+      ownerType,
+      readCheckoutFormValues(formData)
+    );
 
     if (hasFieldErrors(errors)) {
       setFieldErrors(errors);
@@ -69,9 +145,11 @@ export default function RegisterForm() {
     }
 
     setFieldErrors({});
+    setFlowError(null);
     setIsPending(true);
 
     try {
+      // TODO: connect ownerType and business fields to API once backend fields are confirmed.
       const result = await submitRegistration(formData);
       setState(result);
     } finally {
@@ -82,199 +160,102 @@ export default function RegisterForm() {
   return (
     <div style={layoutGridStyle}>
       <aside style={cardStyle}>
-        <h2 style={{ margin: '0 0 8px 0', fontSize: '18px', color: '#111827' }}>
-          Choose your plan
-        </h2>
-        <p style={{ ...sectionHintStyle, marginBottom: '16px' }}>
-          Select the subscription that fits your team. Upgrade anytime from your
-          dashboard.
-        </p>
-
-        <SubscriptionPlans
-          selectedPlan={selectedPlan}
-          onSelect={setSelectedPlan}
+        <SubscriptionRoleSelector
+          selectedRole={selectedRole}
+          onSelect={(role) => {
+            setSelectedRole(role);
+            setFieldErrors({});
+            setFlowError(null);
+          }}
           disabled={isPending}
           compact
         />
 
-        <ul style={valuePropStyle}>
-          <li>Procurement and selling in one platform</li>
-          <li>Secure dashboard access after onboarding</li>
-          <li>Complete profile and settings inside USTRIX</li>
-        </ul>
+        <hr style={sectionDividerStyle} />
 
-        <p style={{ ...sectionHintStyle, margin: '16px 0 0 0', fontSize: '13px' }}>
-          {PAYMENT_NOTE}
-        </p>
+        <SubscriptionOwnerTypeSelector
+          selectedOwnerType={ownerType}
+          onSelect={(value) => {
+            setOwnerType(value);
+            setFieldErrors({});
+            setFlowError(null);
+          }}
+          disabled={isPending || !canSpecifyOwnerType}
+          idPrefix="register-owner-type"
+          compact
+        />
+
+        {flowError && (
+          <p role="alert" style={{ ...fieldErrorStyle, marginTop: '8px' }}>
+            {flowError}
+          </p>
+        )}
+
+        <hr style={sectionDividerStyle} />
+
+        <h2 style={compactHeadingStyle}>{CHOOSE_PLAN_HEADING}</h2>
+
+        <SubscriptionPlans
+          selectedPlan={selectedPlan}
+          onSelect={setSelectedPlan}
+          ownerType={ownerType}
+          disabled={isPending || !canChoosePlan}
+          blocked={!canChoosePlan}
+          blockedMessage={
+            !selectedRole
+              ? ROLE_REQUIRED_MESSAGE
+              : OWNER_TYPE_REQUIRED_MESSAGE
+          }
+          compact
+        />
       </aside>
 
-      <section style={formCardStyle}>
-        <h2 style={{ margin: '0 0 8px 0', fontSize: '18px', color: '#111827' }}>
-          Admin account
-        </h2>
-        <p style={{ ...sectionHintStyle, marginBottom: '18px' }}>
-          Basic details only. Business configuration is completed in your
-          dashboard after login.
-        </p>
+      <section style={checkoutPanelStyle}>
+        <h2 style={compactHeadingStyle}>Checkout</h2>
+
+        <SubscriptionCheckoutSummary
+          subscriptionType={selectedRole}
+          planCode={selectedPlan}
+        />
 
         <form noValidate onSubmit={handleSubmit}>
+          <input type="hidden" name="subscriptionRole" value={selectedRole ?? ''} />
+          {/* TODO: connect ownerType to API once backend field is confirmed. */}
+          <input type="hidden" name="ownerType" value={ownerType ?? ''} />
+          <input type="hidden" name="planCode" value={selectedPlan} />
+
           {state.status === 'error' && (
             <div role="alert" style={alertErrorStyle}>
               {state.message}
             </div>
           )}
 
-          <div style={fieldStyle}>
-            <label htmlFor="companyName" style={labelStyle}>
-              Company / Account Name
-            </label>
-            <input
-              id="companyName"
-              name="companyName"
-              type="text"
-              disabled={isPending}
-              style={getInputStyle(Boolean(fieldErrors.companyName))}
-              placeholder="Acme Facility Services Inc."
+          {ownerType ? (
+            <SubscriptionCheckoutForm
+              key={ownerType}
+              ownerType={ownerType}
+              disabled={isPending || !canProceed}
+              fieldErrors={fieldErrors}
+              idPrefix="register"
             />
-            {fieldErrors.companyName && (
-              <p style={fieldErrorStyle}>{fieldErrors.companyName}</p>
-            )}
-          </div>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '12px',
-              marginBottom: '14px',
-            }}
-          >
-            <div>
-              <label htmlFor="firstName" style={labelStyle}>
-                Admin First Name
-              </label>
-              <input
-                id="firstName"
-                name="firstName"
-                type="text"
-                disabled={isPending}
-                style={getInputStyle(Boolean(fieldErrors.firstName))}
-              />
-              {fieldErrors.firstName && (
-                <p style={fieldErrorStyle}>{fieldErrors.firstName}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="lastName" style={labelStyle}>
-                Admin Last Name
-              </label>
-              <input
-                id="lastName"
-                name="lastName"
-                type="text"
-                disabled={isPending}
-                style={getInputStyle(Boolean(fieldErrors.lastName))}
-              />
-              {fieldErrors.lastName && (
-                <p style={fieldErrorStyle}>{fieldErrors.lastName}</p>
-              )}
-            </div>
-          </div>
-
-          <div style={fieldStyle}>
-            <label htmlFor="email" style={labelStyle}>
-              Admin Email
-            </label>
-            <p
-              style={{
-                ...sectionHintStyle,
-                margin: '0 0 8px 0',
-                fontSize: '13px',
-              }}
-            >
-              {ADMIN_EMAIL_HELPER}
+          ) : (
+            <p style={{ margin: '0 0 18px', fontSize: '13px', lineHeight: 1.5, color: '#64748b' }}>
+              Complete your subscription selections to enter account details.
             </p>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              disabled={isPending}
-              style={getInputStyle(Boolean(fieldErrors.email))}
-              placeholder="admin@yourcompany.com"
-              autoComplete="email"
-            />
-            {fieldErrors.email && (
-              <p style={fieldErrorStyle}>{fieldErrors.email}</p>
-            )}
-          </div>
-
-          <div style={fieldStyle}>
-            <label htmlFor="mobileNumber" style={labelStyle}>
-              Mobile Number <span style={{ fontWeight: 400 }}>(optional)</span>
-            </label>
-            <input
-              id="mobileNumber"
-              name="mobileNumber"
-              type="tel"
-              disabled={isPending}
-              style={getInputStyle(false)}
-              placeholder="+1 416 555 0100"
-            />
-          </div>
-
-          <div style={fieldStyle}>
-            <label htmlFor="password" style={labelStyle}>
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              disabled={isPending}
-              style={getInputStyle(Boolean(fieldErrors.password))}
-              autoComplete="new-password"
-            />
-            <p
-              style={{
-                ...sectionHintStyle,
-                margin: '6px 0 0 0',
-                fontSize: '12px',
-              }}
-            >
-              {PASSWORD_HELPER_TEXT}
-            </p>
-            {fieldErrors.password && (
-              <p style={fieldErrorStyle}>{fieldErrors.password}</p>
-            )}
-          </div>
-
-          <div style={{ ...fieldStyle, marginBottom: '20px' }}>
-            <label htmlFor="confirmPassword" style={labelStyle}>
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              disabled={isPending}
-              style={getInputStyle(Boolean(fieldErrors.confirmPassword))}
-              autoComplete="new-password"
-            />
-            {fieldErrors.confirmPassword && (
-              <p style={fieldErrorStyle}>{fieldErrors.confirmPassword}</p>
-            )}
-          </div>
+          )}
 
           <button
             type="submit"
-            disabled={isPending}
-            style={primaryButtonStyle(isPending)}
+            disabled={isPending || !canProceed}
+            style={checkoutSubmitButtonStyle(isPending || !canProceed)}
           >
-            {isPending
-              ? 'Creating account…'
-              : isPaidPlan(selectedPlan)
-                ? 'Create Account'
-                : 'Continue with Free'}
+            {!canProceed
+              ? 'Complete selections'
+              : isPending
+                ? 'Creating account…'
+                : isPaidPlan(selectedPlan)
+                  ? 'Continue to payment'
+                  : 'Create account'}
           </button>
         </form>
       </section>

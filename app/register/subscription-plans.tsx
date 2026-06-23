@@ -1,21 +1,26 @@
 'use client';
 
 import type { CSSProperties } from 'react';
+import { getPlanCodesForOwnerType } from '@/components/subscription/plan-matrix';
+import type { OwnerType } from '@/components/subscription/types';
 import { SUBSCRIPTION_PLANS, type PlanCode } from './types';
 
 type SubscriptionPlansProps = {
   selectedPlan: PlanCode;
   onSelect: (planCode: PlanCode) => void;
+  ownerType?: OwnerType | null;
   disabled?: boolean;
   compact?: boolean;
+  blocked?: boolean;
+  blockedMessage?: string;
 };
 
 function getCardStyle(selected: boolean, recommended: boolean): CSSProperties {
   return {
     position: 'relative',
     width: '100%',
-    padding: '14px 16px',
-    borderRadius: '12px',
+    padding: '12px 14px',
+    borderRadius: '10px',
     border: selected ? '2px solid #111827' : '1px solid #e5e7eb',
     background: selected ? '#f9fafb' : '#ffffff',
     cursor: 'pointer',
@@ -30,18 +35,51 @@ function getCardStyle(selected: boolean, recommended: boolean): CSSProperties {
 export default function SubscriptionPlans({
   selectedPlan,
   onSelect,
+  ownerType = null,
   disabled = false,
   compact = false,
+  blocked = false,
+  blockedMessage = 'Choose a subscription owner type to view plans.',
 }: SubscriptionPlansProps) {
+  const allowedPlanCodes = getPlanCodesForOwnerType(ownerType);
+  const visiblePlans = SUBSCRIPTION_PLANS.filter((plan) =>
+    blocked ? true : allowedPlanCodes.includes(plan.planCode)
+  );
+
   return (
+    <div style={{ position: 'relative' }}>
+      {blocked && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            textAlign: 'center',
+            fontSize: '14px',
+            fontWeight: 600,
+            color: '#0B1120',
+            background: 'rgba(248, 251, 255, 0.78)',
+            borderRadius: '12px',
+            zIndex: 2,
+          }}
+        >
+          {blockedMessage}
+        </div>
+      )}
     <div
       style={{
         display: 'grid',
         gap: '10px',
         gridTemplateColumns: compact ? '1fr' : 'repeat(2, minmax(0, 1fr))',
+        opacity: blocked ? 0.45 : 1,
+        pointerEvents: blocked ? 'none' : 'auto',
       }}
     >
-      {SUBSCRIPTION_PLANS.map((plan) => {
+      {visiblePlans.map((plan) => {
         const selected = selectedPlan === plan.planCode;
 
         return (
@@ -131,6 +169,7 @@ export default function SubscriptionPlans({
           </button>
         );
       })}
+    </div>
     </div>
   );
 }

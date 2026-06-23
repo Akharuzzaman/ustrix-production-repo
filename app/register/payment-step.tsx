@@ -10,16 +10,16 @@ import {
   alertErrorStyle,
   alertInfoStyle,
   cardStyle,
+  compactHeadingStyle,
   primaryButtonStyle,
-  sectionHintStyle,
 } from './styles';
 import {
   getPlanAmountCad,
-  getPlanByCode,
-  STRIPE_CHECKOUT_NOTE,
   type PlanCode,
   type RegistrationFlowState,
 } from './types';
+import SubscriptionCheckoutSummary from '@/components/subscription/subscription-checkout-summary';
+import type { SubscriptionRole } from '@/components/subscription/types';
 
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
@@ -27,22 +27,13 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
       style={{
         display: 'flex',
         justifyContent: 'space-between',
-        gap: '16px',
-        padding: '10px 0',
-        borderBottom: '1px solid #f3f4f6',
+        gap: '12px',
+        padding: '6px 0',
+        fontSize: '13px',
       }}
     >
-      <span style={{ fontSize: '13px', color: '#6b7280' }}>{label}</span>
-      <span
-        style={{
-          fontSize: '14px',
-          color: '#111827',
-          fontWeight: 600,
-          textAlign: 'right',
-        }}
-      >
-        {value}
-      </span>
+      <span style={{ color: '#6b7280', fontWeight: 600 }}>{label}</span>
+      <span style={{ color: '#111827', fontWeight: 700, textAlign: 'right' }}>{value}</span>
     </div>
   );
 }
@@ -84,48 +75,16 @@ export function FreeDashboardAccess({
   }, [data]);
 
   return (
-    <section style={{ ...cardStyle, maxWidth: '560px', margin: '0 auto' }}>
-      <p style={{ color: '#059669', fontWeight: 600, marginBottom: '8px' }}>
-        Account created
-      </p>
-      <h2 style={{ margin: '0 0 16px 0', color: '#111827', fontSize: '24px' }}>
-        Preparing dashboard access…
-      </h2>
-
-      <div
-        style={{
-          padding: '18px',
-          background: '#ecfdf5',
-          border: '1px solid #a7f3d0',
-          borderRadius: '12px',
-          marginBottom: '20px',
-        }}
-      >
-        <p style={{ color: '#065f46', margin: '0 0 6px 0', fontSize: '13px' }}>
-          Tenant Number
-        </p>
-        <p
-          style={{
-            margin: 0,
-            fontSize: '20px',
-            fontWeight: 700,
-            color: '#047857',
-            fontFamily: 'monospace',
-          }}
-        >
-          {data.tenantNumber}
-        </p>
-      </div>
-
+    <section style={{ ...cardStyle, maxWidth: '420px', margin: '0 auto' }}>
+      <h2 style={compactHeadingStyle}>Opening dashboard…</h2>
       {errorMessage && (
         <div role="alert" style={alertErrorStyle}>
           {errorMessage}
         </div>
       )}
-
       {(isPending || !errorMessage) && (
         <div role="status" style={alertInfoStyle}>
-          Preparing dashboard access…
+          Please wait.
         </div>
       )}
     </section>
@@ -135,16 +94,17 @@ export function FreeDashboardAccess({
 export function PaidPlanCheckout({
   data,
   planCode,
+  subscriptionRole = null,
 }: {
   data: RegisterTenantResponse;
   planCode: PlanCode;
+  subscriptionRole?: SubscriptionRole | null;
 }) {
   const [flowState, setFlowState] =
     useState<RegistrationFlowState>('paymentRequired');
   const [errorMessage, setErrorMessage] = useState('');
   const [isPending, setIsPending] = useState(false);
 
-  const plan = getPlanByCode(planCode);
   const amountDue = getPlanAmountCad(planCode);
   const isBusy = flowState === 'redirectingToStripe' || isPending;
 
@@ -174,33 +134,13 @@ export function PaidPlanCheckout({
   }
 
   return (
-    <section style={{ ...cardStyle, maxWidth: '640px', margin: '0 auto' }}>
-      <p style={{ color: '#059669', fontWeight: 600, marginBottom: '8px' }}>
-        Account created
-      </p>
-      <h2 style={{ margin: '0 0 8px 0', color: '#111827', fontSize: '26px' }}>
-        Secure payment
-      </h2>
-      <p style={{ ...sectionHintStyle, marginBottom: '20px' }}>
-        {STRIPE_CHECKOUT_NOTE}
-      </p>
+    <section style={{ ...cardStyle, maxWidth: '420px', margin: '0 auto' }}>
+      <h2 style={compactHeadingStyle}>Payment</h2>
 
-      <div
-        style={{
-          padding: '18px',
-          background: '#f9fafb',
-          border: '1px solid #e5e7eb',
-          borderRadius: '12px',
-          marginBottom: '18px',
-        }}
-      >
-        <SummaryRow label="Selected Plan" value={plan.name} />
-        <SummaryRow label="Billing Cycle" value="Monthly" />
-        <SummaryRow label="Amount Due" value={`CAD ${amountDue}`} />
-        <SummaryRow label="Currency" value="CAD" />
-        <SummaryRow label="Tenant Number" value={data.tenantNumber} />
-        <SummaryRow label="Account Name" value={data.tenant.tenantName} />
-        <SummaryRow label="Admin Email" value={data.adminUser.email} />
+      <SubscriptionCheckoutSummary subscriptionType={subscriptionRole} planCode={planCode} />
+
+      <div style={{ marginBottom: '14px' }}>
+        <SummaryRow label="Amount" value={`CAD ${amountDue}`} />
       </div>
 
       {flowState === 'error' && errorMessage && (
@@ -210,8 +150,8 @@ export function PaidPlanCheckout({
       )}
 
       {isBusy && (
-        <div role="status" style={{ ...alertInfoStyle, marginBottom: '20px' }}>
-          Redirecting to Stripe secure checkout…
+        <div role="status" style={{ ...alertInfoStyle, marginBottom: '12px' }}>
+          Redirecting…
         </div>
       )}
 
@@ -221,7 +161,7 @@ export function PaidPlanCheckout({
         disabled={isBusy}
         style={primaryButtonStyle(isBusy)}
       >
-        {isBusy ? 'Redirecting to secure payment…' : 'Continue to Secure Payment'}
+        {isBusy ? 'Redirecting…' : 'Pay with Stripe'}
       </button>
     </section>
   );

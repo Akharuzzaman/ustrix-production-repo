@@ -59,7 +59,7 @@ export const USER_TYPES = [
   {
     title: 'Agents & Brokers',
     description: 'Confidential partner channel for qualified lead flow.',
-    href: '/agent-register',
+    href: '/register?role=agent',
     icon: 'agents' as const,
   },
 ] as const;
@@ -269,22 +269,22 @@ export const SUBSCRIPTION_ROLE_FEATURES = [
 export const SUBSCRIPTION_ROLES = [
   {
     id: 'buyer' as const,
-    title: 'Buyer Subscription',
-    href: '/register',
+    title: 'Buyer',
+    href: '/register?role=buyer',
     cta: 'Start as Buyer',
     accent: 'buyer' as const,
   },
   {
     id: 'seller' as const,
-    title: 'Seller Subscription',
-    href: '/register',
+    title: 'Seller',
+    href: '/register?role=seller',
     cta: 'Start as Seller',
     accent: 'seller' as const,
   },
   {
     id: 'agent' as const,
-    title: 'Agent Subscription',
-    href: '/agent-register',
+    title: 'Agent',
+    href: '/register?role=agent',
     cta: 'Start as Agent',
     accent: 'agent' as const,
   },

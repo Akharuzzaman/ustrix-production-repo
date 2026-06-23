@@ -16,34 +16,20 @@ export default function RegisterPageContent() {
 
   return (
     <main style={pageStyle}>
-      <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '960px', margin: '0 auto' }}>
         <BrandHeader />
         {paymentCancelled && <PaymentCancelledNotice />}
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-          <h1
-            style={{
-              margin: '0 0 10px 0',
-              fontSize: 'clamp(26px, 4vw, 32px)',
-              color: '#111827',
-              fontWeight: 700,
-            }}
-          >
-            Start your USTRIX subscription
-          </h1>
-          <p
-            style={{
-              margin: 0,
-              fontSize: '16px',
-              color: '#4b5563',
-              lineHeight: 1.6,
-              maxWidth: '640px',
-              marginInline: 'auto',
-            }}
-          >
-            Choose a plan, create your admin account, and continue to your
-            secure USTRIX dashboard.
-          </p>
-        </div>
+        <h1
+          style={{
+            margin: '0 0 16px 0',
+            fontSize: 'clamp(22px, 3vw, 26px)',
+            color: '#111827',
+            fontWeight: 700,
+            textAlign: 'center',
+          }}
+        >
+          Subscription
+        </h1>
         <RegisterForm />
       </div>
     </main>

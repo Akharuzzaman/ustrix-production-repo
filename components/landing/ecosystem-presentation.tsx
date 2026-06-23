@@ -643,7 +643,7 @@ export default function EcosystemPresentation({ open, onClose }: EcosystemPresen
               {t.getStarted}
             </Link>
             <Link
-              href="/agent-register"
+              href="/register?role=agent"
               className={`${styles.outroBtn} ${styles.outroBtnGhost}`}
             >
               {t.ecosystemPresentationAgentCta}

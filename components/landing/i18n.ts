@@ -89,6 +89,9 @@ export type TranslationKeys = {
   billingMonthly: string;
   billingYearly: string;
   subscriptionNote: string;
+  subscriptionForHint: string;
+  subscriptionSubscribeHint: string;
+  subscriptionPlanGateHint: string;
   dashboardTitle: string;
   dashboardLead: string;
   dashboardCta: string;
@@ -230,7 +233,13 @@ export const translations: Record<LanguageCode, TranslationKeys> = {
     billingMonthly: 'Monthly',
     billingYearly: 'Yearly',
     subscriptionNote:
-      'After subscription, buyers, sellers, and approved partners access the secure dashboard.',
+      'Choose your role and subscription owner, select a plan, then register. Organization admins can assign roles and users after purchase.',
+    subscriptionForHint:
+      'Step 1: Choose Subscription For to continue.',
+    subscriptionSubscribeHint:
+      'Step 1: Choose Subscribe as (Buyer, Seller, or Agent) to continue.',
+    subscriptionPlanGateHint:
+      'Complete Subscribe as and Please Specify to enable plan selection.',
     dashboardTitle: 'Admin dashboard overview',
     dashboardLead:
       'Operational control continues in the secure dashboard.',
@@ -377,7 +386,13 @@ export const translations: Record<LanguageCode, TranslationKeys> = {
     billingMonthly: 'Mensuel',
     billingYearly: 'Annuel',
     subscriptionNote:
-      'Après l’abonnement, les acheteurs, vendeurs et partenaires approuvés accèdent au tableau de bord sécurisé.',
+      'Choisissez votre rôle et le propriétaire de l’abonnement, sélectionnez un forfait, puis inscrivez-vous. Les administrateurs d’organisation peuvent assigner des rôles après l’achat.',
+    subscriptionForHint:
+      'Étape 1 : choisissez Subscription For pour continuer.',
+    subscriptionSubscribeHint:
+      'Étape 1 : choisissez Subscribe as (Acheteur, Vendeur ou Agent) pour continuer.',
+    subscriptionPlanGateHint:
+      'Complétez Subscribe as et Please Specify pour activer le choix du forfait.',
     dashboardTitle: 'Aperçu du tableau de bord admin',
     dashboardLead:
       'Le contrôle opérationnel se poursuit dans le tableau de bord sécurisé.',

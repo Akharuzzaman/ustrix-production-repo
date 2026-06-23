@@ -174,7 +174,7 @@ export default function UstrixEcosystem() {
               title={t.ecosystemAgents}
               description={t.ecosystemAgentsText}
               className={styles.nodeAgents}
-              href="/agent-register"
+              href="/register?role=agent"
             />
           </div>
 
@@ -202,7 +202,7 @@ export default function UstrixEcosystem() {
 
             <div className={styles.mobileConnector} aria-hidden="true" />
 
-            <Link href="/agent-register" className={styles.mobileNode}>
+            <Link href="/register?role=agent" className={styles.mobileNode}>
               <div className={styles.nodeDot} aria-hidden="true" />
               <h3 className={styles.nodeTitle}>{t.ecosystemAgents}</h3>
               <p className={styles.nodeText}>{t.ecosystemAgentsText}</p>

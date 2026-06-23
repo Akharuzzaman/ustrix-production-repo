@@ -490,7 +490,7 @@ export default function BusinessEcosystemSection() {
           <Link href="/register" className={styles.btnPrimary}>
             Start Registration
           </Link>
-          <Link href="/agent-register" className={styles.btnGhost}>
+          <Link href="/register?role=agent" className={styles.btnGhost}>
             Agent Enrollment
           </Link>
         </div>
@@ -510,7 +510,7 @@ export default function BusinessEcosystemSection() {
                 title={AGENT_LABEL}
                 items={[]}
                 accent="agent"
-                href="/agent-register"
+                href="/register?role=agent"
               />
               <AgentFlow label="Compliance Review" direction="down" />
             </div>

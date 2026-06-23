@@ -28,12 +28,33 @@ export type CheckoutFormState =
 export async function submitRegistration(
   formData: FormData
 ): Promise<RegisterFormState> {
+  const ownerType = String(formData.get('ownerType') ?? '').trim();
+  const firstName = String(formData.get('firstName') ?? '').trim();
+  const lastName = String(formData.get('lastName') ?? '').trim();
+  const email = String(formData.get('email') ?? '').trim();
+  const password = String(formData.get('password') ?? '');
+  let companyName = String(formData.get('companyName') ?? '').trim();
+
+  if (ownerType === 'organization') {
+    const corporationNumber = String(formData.get('corporationNumber') ?? '').trim();
+    const addressLine1 = String(formData.get('addressLine1') ?? '').trim();
+
+    if (!companyName || !corporationNumber || !addressLine1) {
+      return {
+        status: 'error',
+        message: 'Company details are required for business or organization accounts.',
+      };
+    }
+  } else if (!companyName) {
+    companyName = `${firstName} ${lastName}`.trim();
+  }
+
   const payload: RegisterTenantPayload = {
-    companyName: String(formData.get('companyName') ?? '').trim(),
-    firstName: String(formData.get('firstName') ?? '').trim(),
-    lastName: String(formData.get('lastName') ?? '').trim(),
-    email: String(formData.get('email') ?? '').trim(),
-    password: String(formData.get('password') ?? ''),
+    companyName,
+    firstName,
+    lastName,
+    email,
+    password,
     countryCode: '001',
     regionCode: 'ON',
     currencyCode: 'CAD',
@@ -48,8 +69,7 @@ export async function submitRegistration(
   ) {
     return {
       status: 'error',
-      message:
-        'Company name, admin name, email, and password are required.',
+      message: 'Name, email, and password are required.',
     };
   }
 
