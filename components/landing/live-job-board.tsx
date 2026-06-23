@@ -67,13 +67,17 @@ export default function LiveJobBoard() {
               {t.scheduleTitle}
             </h2>
           </div>
-          <div className={styles.filters}>
-            <select
-              className={styles.filterSelectDark}
-              value={provinceFilter}
-              onChange={(e) => setProvinceFilter(e.target.value)}
-              aria-label="Filter by province"
-            >
+          <div className={styles.scheduleHeaderMeta}>
+            <span className={styles.scheduleStatChip}>
+              {filteredJobs.length} active listings
+            </span>
+            <div className={styles.filters}>
+              <select
+                className={styles.filterSelectLight}
+                value={provinceFilter}
+                onChange={(e) => setProvinceFilter(e.target.value)}
+                aria-label="Filter by province"
+              >
               {provinces.map((p) => (
                 <option key={p} value={p}>
                   {p === 'All' ? 'All Provinces' : p}
@@ -81,7 +85,7 @@ export default function LiveJobBoard() {
               ))}
             </select>
             <select
-              className={styles.filterSelectDark}
+              className={styles.filterSelectLight}
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
               aria-label="Filter by category"
@@ -93,7 +97,7 @@ export default function LiveJobBoard() {
               ))}
             </select>
             <select
-              className={styles.filterSelectDark}
+              className={styles.filterSelectLight}
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               aria-label="Filter by status"
@@ -104,9 +108,13 @@ export default function LiveJobBoard() {
                 </option>
               ))}
             </select>
+            </div>
           </div>
         </div>
 
+        <div className={styles.scheduleCrystalFrame}>
+          <span className={styles.scheduleFrameAccent} aria-hidden="true" />
+          <div className={styles.scheduleCrystalInner}>
         <div
           className={styles.scheduleBoard}
           onMouseEnter={() => setPaused(true)}
@@ -148,7 +156,12 @@ export default function LiveJobBoard() {
             </div>
           </div>
         </div>
+          </div>
+        </div>
 
+        <div className={styles.scheduleCrystalFrameMobile}>
+          <span className={styles.scheduleFrameAccent} aria-hidden="true" />
+          <div className={styles.scheduleCrystalInnerMobile}>
         <div className={styles.scheduleMobile}>
           {filteredJobs.map((job) => (
             <article key={job.id} className={styles.scheduleMobileCard}>
@@ -169,6 +182,8 @@ export default function LiveJobBoard() {
               </div>
             </article>
           ))}
+        </div>
+          </div>
         </div>
       </div>
     </section>

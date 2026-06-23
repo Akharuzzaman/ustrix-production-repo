@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import EcosystemPresentation from './ecosystem-presentation';
 import { useLanding } from './landing-provider';
 import styles from './business-ecosystem-section.module.css';
 
@@ -40,10 +41,13 @@ const WORKFLOW_CYCLE = [
 const BUYER_WORKFLOW = WORKFLOW_CYCLE.filter((s) => s.side === 'buyer');
 const SELLER_WORKFLOW = WORKFLOW_CYCLE.filter((s) => s.side === 'seller');
 
+const AGENT_LABEL = 'Agent';
+const TAX_AUTHORITY_LABEL = 'Tax Authority / CRA';
+
 const MOBILE_FLOW = [
   {
     kind: 'network' as const,
-    title: 'Approved Agent Channel',
+    title: AGENT_LABEL,
     accent: 'agent' as const,
     items: [] as string[],
   },
@@ -73,6 +77,12 @@ const MOBILE_FLOW = [
     items: SELLER_ITEMS,
   },
   {
+    kind: 'network' as const,
+    title: TAX_AUTHORITY_LABEL,
+    accent: 'agent' as const,
+    items: [] as string[],
+  },
+  {
     kind: 'flow' as const,
     title: 'Settlement Engine / Internal Controls',
     accent: 'platform' as const,
@@ -84,6 +94,7 @@ const LEGEND = [
   { label: 'Buyer', color: '#2563EB' },
   { label: 'Seller', color: '#16A34A' },
   { label: 'Agent', color: '#F59E0B' },
+  { label: 'Tax Authority / CRA', color: '#D97706' },
   { label: 'Platform', color: '#E11D2E' },
 ];
 
@@ -451,6 +462,7 @@ function NetworkPanel({
 export default function BusinessEcosystemSection() {
   const { t } = useLanding();
   const activeWorkflowStep = useWorkflowSequence();
+  const [presentationOpen, setPresentationOpen] = useState(false);
 
   return (
     <section
@@ -468,6 +480,13 @@ export default function BusinessEcosystemSection() {
         </header>
 
         <div className={styles.ctaRow}>
+          <button
+            type="button"
+            className={styles.btnPresentation}
+            onClick={() => setPresentationOpen(true)}
+          >
+            {t.ecosystemPresentationLaunch}
+          </button>
           <Link href="/register" className={styles.btnPrimary}>
             Start Registration
           </Link>
@@ -482,18 +501,18 @@ export default function BusinessEcosystemSection() {
           <div
             className={styles.desktopMap}
             role="img"
-            aria-label="USTRIX business ecosystem diagram with buyer network, seller network, approved agent channels, and platform core"
+            aria-label="USTRIX business ecosystem diagram with buyer network, seller network, agent channel, tax authority compliance, and platform core"
           >
             <LoopSvg />
 
             <div className={styles.gridAgentTop}>
               <NetworkPanel
-                title="Approved Agent Channel"
+                title={AGENT_LABEL}
                 items={[]}
                 accent="agent"
                 href="/agent-register"
               />
-              <AgentFlow label="Guided onboarding" direction="down" />
+              <AgentFlow label="Compliance Review" direction="down" />
             </div>
 
             <div className={styles.gridBuyer}>
@@ -535,12 +554,11 @@ export default function BusinessEcosystemSection() {
             </div>
 
             <div className={styles.gridAgentBottom}>
-              <AgentFlow label="Assisted transaction" direction="up" />
+              <AgentFlow label="Verified Records" direction="up" />
               <NetworkPanel
-                title="Approved Agent Channel"
+                title={TAX_AUTHORITY_LABEL}
                 items={[]}
                 accent="agent"
-                href="/agent-register"
               />
             </div>
           </div>
@@ -610,6 +628,11 @@ export default function BusinessEcosystemSection() {
           ))}
         </div>
       </div>
+
+      <EcosystemPresentation
+        open={presentationOpen}
+        onClose={() => setPresentationOpen(false)}
+      />
     </section>
   );
 }

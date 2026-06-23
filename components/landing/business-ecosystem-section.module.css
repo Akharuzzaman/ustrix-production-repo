@@ -107,6 +107,29 @@
   color: #111827;
 }
 
+.btnPresentation {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 22px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btnPresentation:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+  box-shadow: 0 12px 28px rgba(17, 24, 39, 0.24);
+}
+
 .diagramFrame {
   position: relative;
   padding: 32px 24px 28px;

@@ -8,6 +8,8 @@ import {
   DASHBOARD_METRICS,
   PLANS,
   SERVICE_AREAS,
+  SUBSCRIPTION_ROLE_FEATURES,
+  SUBSCRIPTION_ROLES,
   TESTIMONIALS,
   USER_TYPES,
 } from './data';
@@ -19,8 +21,10 @@ import { CrystalCard } from './crystal-frame';
 import EnterpriseAudienceCards from './enterprise-audience-cards';
 import EnterpriseHeroVisual from './enterprise-hero-visual';
 import BusinessEcosystemSection from './business-ecosystem-section';
+import EcosystemVideoSection from './ecosystem-video-section';
 import HowItWorksFlow from './how-it-works-flow';
 import LiveJobBoard from './live-job-board';
+import FooterSocialLinks from './footer-social-links';
 import SiteHeader from './site-header';
 import LandingIcon from './landing-icons';
 import TrustIcon from './trust-icon';
@@ -102,6 +106,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <EcosystemVideoSection />
 
       <BusinessEcosystemSection />
 
@@ -268,6 +274,34 @@ export default function LandingPage() {
             </div>
           </div>
 
+          <ul className={styles.subscriptionRoleGrid}>
+            {SUBSCRIPTION_ROLES.map((role) => {
+              const accentClass =
+                role.accent === 'buyer'
+                  ? styles.subscriptionRoleBuyer
+                  : role.accent === 'seller'
+                    ? styles.subscriptionRoleSeller
+                    : styles.subscriptionRoleAgent;
+
+              return (
+                <li
+                  key={role.id}
+                  className={`${styles.subscriptionRoleCard} ${accentClass}`}
+                >
+                <h3 className={styles.subscriptionRoleTitle}>{role.title}</h3>
+                <ul className={styles.subscriptionRoleFeatures}>
+                  {SUBSCRIPTION_ROLE_FEATURES.map((feature) => (
+                    <li key={`${role.id}-${feature}`}>{feature}</li>
+                  ))}
+                </ul>
+                <Link href={role.href} className={styles.subscriptionRoleCta}>
+                  {role.cta}
+                </Link>
+              </li>
+              );
+            })}
+          </ul>
+
           <ul className={styles.planGrid}>
             {PLANS.map((plan) => {
               const prices = PLAN_PRICES[currency][plan.code];
@@ -378,6 +412,7 @@ export default function LandingPage() {
             <div className={styles.footerBrand}>
               <UstrixLogo width={130} wrapperStyle={{ marginBottom: 8 }} />
               <p>{t.footerDescription}</p>
+              <FooterSocialLinks />
             </div>
             <div className={styles.footerCol}>
               <h4>Marketplace</h4>
@@ -434,7 +469,7 @@ export default function LandingPage() {
                   <a href="#footer">Terms of Service</a>
                 </li>
                 <li>
-                  <a href="mailto:support@ustrix.com">support@ustrix.com</a>
+                  <a href="mailto:info@ustrix.ca">info@ustrix.ca</a>
                 </li>
               </ul>
             </div>

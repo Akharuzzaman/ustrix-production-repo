@@ -34,6 +34,36 @@ export type TranslationKeys = {
   ecosystemSellerText: string;
   ecosystemAgents: string;
   ecosystemAgentsText: string;
+  ecosystemPresentationLaunch: string;
+  ecosystemPresentationClose: string;
+  ecosystemPresentationSoundOn: string;
+  ecosystemPresentationSoundOff: string;
+  ecosystemPresentationPlay: string;
+  ecosystemPresentationPause: string;
+  ecosystemPresentationEyebrow: string;
+  ecosystemPresentationBuyerTitle: string;
+  ecosystemPresentationSellerTitle: string;
+  ecosystemPresentationAgentsTitle: string;
+  ecosystemPresentationCoreEyebrow: string;
+  ecosystemPresentationCoreTitle: string;
+  ecosystemPresentationCoreBody: string;
+  ecosystemPresentationWorkflowEyebrow: string;
+  ecosystemPresentationWorkflowTitle: string;
+  ecosystemPresentationWorkflowBody: string;
+  ecosystemPresentationSubscriptionEyebrow: string;
+  ecosystemPresentationSubscriptionTitle: string;
+  ecosystemPresentationSubscriptionBody: string;
+  ecosystemPresentationOutroEyebrow: string;
+  ecosystemPresentationOutroTitle: string;
+  ecosystemPresentationOutroBody: string;
+  ecosystemPresentationAgentCta: string;
+  ecosystemPresentationScene: string;
+  ecosystemVideoEyebrow: string;
+  ecosystemVideoTitle: string;
+  ecosystemVideoSubtitle: string;
+  ecosystemVideoAria: string;
+  ecosystemVideoFallback: string;
+  ecosystemVideoCaptionNote: string;
   trustTitle: string;
   trustMarketplace: string;
   trustMarketplaceText: string;
@@ -129,6 +159,43 @@ export const translations: Record<LanguageCode, TranslationKeys> = {
     ecosystemAgents: 'Agents',
     ecosystemAgentsText:
       'Confidential partner channel supporting qualified lead flow and ecosystem growth.',
+    ecosystemPresentationLaunch: 'Experience Ecosystem',
+    ecosystemPresentationClose: 'Close',
+    ecosystemPresentationSoundOn: 'Sound On',
+    ecosystemPresentationSoundOff: 'Sound Off',
+    ecosystemPresentationPlay: 'Play',
+    ecosystemPresentationPause: 'Pause',
+    ecosystemPresentationEyebrow: 'USTRIX Audio Visual',
+    ecosystemPresentationBuyerTitle: 'Buyer network activated',
+    ecosystemPresentationSellerTitle: 'Seller network activated',
+    ecosystemPresentationAgentsTitle: 'Approved agent channels',
+    ecosystemPresentationCoreEyebrow: 'Platform Core',
+    ecosystemPresentationCoreTitle: 'USTRIX Platform Core',
+    ecosystemPresentationCoreBody:
+      'The secure command center orchestrating procurement, orders, subscriptions, and settlement.',
+    ecosystemPresentationWorkflowEyebrow: 'Procurement workflow',
+    ecosystemPresentationWorkflowTitle: 'Nine-step closed loop',
+    ecosystemPresentationWorkflowBody:
+      'Buyer and seller lanes pulse through the platform in a continuous RFP-to-settlement cycle.',
+    ecosystemPresentationSubscriptionEyebrow: 'Subscription engine',
+    ecosystemPresentationSubscriptionTitle: 'Always-on subscription loop',
+    ecosystemPresentationSubscriptionBody:
+      'Plans orbit the ecosystem, keeping buyers, sellers, and partners connected to platform services.',
+    ecosystemPresentationOutroEyebrow: 'Ready to connect',
+    ecosystemPresentationOutroTitle: 'Connect. Transact. Grow.',
+    ecosystemPresentationOutroBody:
+      'Join the USTRIX marketplace and run procurement, service orders, and settlement from one dashboard.',
+    ecosystemPresentationAgentCta: 'Agent Enrollment',
+    ecosystemPresentationScene: 'Scene',
+    ecosystemVideoEyebrow: 'Ecosystem Overview',
+    ecosystemVideoTitle: 'See the USTRIX ecosystem in motion',
+    ecosystemVideoSubtitle:
+      'An animated walkthrough of buyers, sellers, agents, tax authority compliance, platform core, workflow, and subscription loop.',
+    ecosystemVideoAria: 'USTRIX business ecosystem animated overview',
+    ecosystemVideoFallback:
+      'Animation is not available in your browser. Scroll to the ecosystem diagram below.',
+    ecosystemVideoCaptionNote:
+      'Live ecosystem animation with scene captions — loops automatically.',
     trustTitle: 'Built for operational trust',
     trustMarketplace: 'Centralized Marketplace',
     trustMarketplaceText:
@@ -239,6 +306,43 @@ export const translations: Record<LanguageCode, TranslationKeys> = {
     ecosystemAgents: 'Agents',
     ecosystemAgentsText:
       'Canal partenaire confidentiel soutenant les prospects qualifiés et la croissance de l’écosystème.',
+    ecosystemPresentationLaunch: 'Découvrir l’écosystème',
+    ecosystemPresentationClose: 'Fermer',
+    ecosystemPresentationSoundOn: 'Son activé',
+    ecosystemPresentationSoundOff: 'Son désactivé',
+    ecosystemPresentationPlay: 'Lecture',
+    ecosystemPresentationPause: 'Pause',
+    ecosystemPresentationEyebrow: 'Présentation audiovisuelle USTRIX',
+    ecosystemPresentationBuyerTitle: 'Réseau acheteurs activé',
+    ecosystemPresentationSellerTitle: 'Réseau vendeurs activé',
+    ecosystemPresentationAgentsTitle: 'Canaux agents approuvés',
+    ecosystemPresentationCoreEyebrow: 'Cœur de plateforme',
+    ecosystemPresentationCoreTitle: 'Cœur de plateforme USTRIX',
+    ecosystemPresentationCoreBody:
+      'Le centre de commande sécurisé qui orchestre approvisionnement, commandes, abonnements et règlement.',
+    ecosystemPresentationWorkflowEyebrow: 'Flux d’approvisionnement',
+    ecosystemPresentationWorkflowTitle: 'Boucle fermée en neuf étapes',
+    ecosystemPresentationWorkflowBody:
+      'Les voies acheteur et vendeur pulsent via la plateforme dans un cycle continu de l’appel d’offres au règlement.',
+    ecosystemPresentationSubscriptionEyebrow: 'Moteur d’abonnement',
+    ecosystemPresentationSubscriptionTitle: 'Boucle d’abonnement continue',
+    ecosystemPresentationSubscriptionBody:
+      'Les forfaits orbitent autour de l’écosystème et maintiennent acheteurs, vendeurs et partenaires connectés.',
+    ecosystemPresentationOutroEyebrow: 'Prêt à vous connecter',
+    ecosystemPresentationOutroTitle: 'Connecter. Transiger. Croître.',
+    ecosystemPresentationOutroBody:
+      'Rejoignez le marché USTRIX et gérez approvisionnement, commandes de services et règlement depuis un tableau de bord.',
+    ecosystemPresentationAgentCta: 'Inscription agent',
+    ecosystemPresentationScene: 'Scène',
+    ecosystemVideoEyebrow: 'Aperçu de l’écosystème',
+    ecosystemVideoTitle: 'L’écosystème USTRIX en mouvement',
+    ecosystemVideoSubtitle:
+      'Une animation guidée des acheteurs, vendeurs, agents, conformité fiscale, cœur de plateforme, flux de travail et boucle d’abonnement.',
+    ecosystemVideoAria: 'Aperçu animé de l’écosystème commercial USTRIX',
+    ecosystemVideoFallback:
+      'L’animation n’est pas disponible dans votre navigateur. Faites défiler jusqu’au diagramme ci-dessous.',
+    ecosystemVideoCaptionNote:
+      'Animation de l’écosystème en direct avec légendes — lecture en boucle automatique.',
     trustTitle: 'Conçu pour la confiance opérationnelle',
     trustMarketplace: 'Marché centralisé',
     trustMarketplaceText:

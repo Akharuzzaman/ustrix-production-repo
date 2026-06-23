@@ -259,6 +259,64 @@ export const TESTIMONIALS = [
   },
 ] as const;
 
+export const SUBSCRIPTION_ROLE_FEATURES = [
+  'Monthly platform access',
+  'Profile and dashboard access',
+  'Verified onboarding',
+  'Role-based marketplace features',
+] as const;
+
+export const SUBSCRIPTION_ROLES = [
+  {
+    id: 'buyer' as const,
+    title: 'Buyer Subscription',
+    href: '/register',
+    cta: 'Start as Buyer',
+    accent: 'buyer' as const,
+  },
+  {
+    id: 'seller' as const,
+    title: 'Seller Subscription',
+    href: '/register',
+    cta: 'Start as Seller',
+    accent: 'seller' as const,
+  },
+  {
+    id: 'agent' as const,
+    title: 'Agent Subscription',
+    href: '/agent-register',
+    cta: 'Start as Agent',
+    accent: 'agent' as const,
+  },
+] as const;
+
+export const SOCIAL_LINKS = [
+  {
+    id: 'linkedin',
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/ustrix/',
+    iconSrc: '/icons/social/linkedin.png',
+  },
+  {
+    id: 'facebook',
+    label: 'Facebook',
+    href: 'https://www.facebook.com/ustrix',
+    iconSrc: '/icons/social/facebook.png',
+  },
+  {
+    id: 'x',
+    label: 'X (Twitter)',
+    href: 'https://x.com/ustrix',
+    iconSrc: '/icons/social/x.png',
+  },
+  {
+    id: 'youtube',
+    label: 'YouTube',
+    href: 'https://www.youtube.com/@ustrix',
+    iconSrc: '/icons/social/youtube.png',
+  },
+] as const;
+
 export const PLANS = [
   {
     code: 'FREE' as const,
