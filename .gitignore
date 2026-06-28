@@ -24,3 +24,6 @@ next-env.d.ts
 ustrix-node.js-website/.next/
 ustrix-node.js-website/out/
 ustrix-node.js-website/node_modules/
+
+# Firebase local cache
+ustrix-node.js-website/.firebase/
