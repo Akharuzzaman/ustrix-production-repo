@@ -27,3 +27,7 @@ ustrix-node.js-website/node_modules/
 
 # Firebase local cache
 ustrix-node.js-website/.firebase/
+
+# Firebase local cache folders
+ustrix-node.js-website/ustrix-dev-website/.firebase/
+ustrix-node.js-website/ustrix-prod-website/.firebase/
