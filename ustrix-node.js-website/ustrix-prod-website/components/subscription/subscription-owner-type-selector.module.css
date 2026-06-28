@@ -1,0 +1,149 @@
+.section {
+  margin-bottom: 20px;
+}
+
+.sectionDisabled {
+  opacity: 0.55;
+}
+
+.compact {
+  margin-bottom: 14px;
+}
+
+.compact .heading {
+  margin-bottom: 8px;
+  font-size: 0.9375rem;
+}
+
+.compact .grid {
+  gap: 8px;
+}
+
+.compact .card {
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.compact .cardTitle {
+  margin-bottom: 0;
+  font-size: 0.875rem;
+}
+
+.compact .cardDescription {
+  margin-top: 4px;
+  font-size: 0.75rem;
+}
+
+.heading {
+  margin: 0 0 6px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0b1120;
+}
+
+.helper {
+  margin: 0 0 14px;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.card {
+  width: 100%;
+  text-align: left;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid #dbeafe;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.card:hover:not(:disabled) {
+  border-color: #93c5fd;
+  box-shadow:
+    0 4px 14px rgba(37, 99, 235, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.cardSelected {
+  border-width: 2px;
+  box-shadow:
+    0 6px 18px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.cardTitle {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0b1120;
+  line-height: 1.35;
+}
+
+.cardDescription {
+  display: block;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.adminNotice {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1e40af;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.requiredMessage {
+  margin: 10px 0 0;
+  font-size: 0.8125rem;
+  color: #b45309;
+}
+
+.plansGate {
+  position: relative;
+}
+
+.plansGateBlocked {
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+}
+
+.plansGateOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0b1120;
+  background: rgba(248, 251, 255, 0.72);
+  border-radius: 12px;
+  pointer-events: none;
+}

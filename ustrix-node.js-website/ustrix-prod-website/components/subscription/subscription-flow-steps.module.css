@@ -1,0 +1,48 @@
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.stepActive {
+  color: #0b1120;
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.stepComplete {
+  color: #047857;
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.compact .step {
+  font-size: 0.6875rem;
+  padding: 5px 8px;
+}
+
+@media (max-width: 640px) {
+  .steps {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .step {
+    text-align: center;
+  }
+}

@@ -1,0 +1,90 @@
+.section {
+  margin-bottom: 20px;
+}
+
+.heading {
+  margin: 0 0 6px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0b1120;
+}
+
+.helper {
+  margin: 0 0 14px;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  width: 100%;
+  text-align: left;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover:not(:disabled) {
+  border-color: #93c5fd;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+}
+
+.cardSelected {
+  border-width: 2px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.cardTitle {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0b1120;
+}
+
+.cardDescription {
+  display: block;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.compact {
+  margin-bottom: 14px;
+}
+
+.compact .heading {
+  margin-bottom: 8px;
+  font-size: 0.9375rem;
+}
+
+.compact .grid {
+  gap: 8px;
+}
+
+.compact .card {
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.compact .cardTitle {
+  margin-bottom: 0;
+  font-size: 0.875rem;
+}
