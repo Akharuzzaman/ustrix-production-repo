@@ -8,4 +8,3 @@ This directory separates the USTRIX website into development and production webs
 ustrix-node.js-website/
 ├── ustrix-dev-website/
 └── ustrix-prod-website/
-eof

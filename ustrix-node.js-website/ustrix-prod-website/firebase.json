@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "ustrix-prod-website",
     "public": "out",
     "ignore": [
       "firebase.json",

@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "ustrix-web"
-  }
+  },
+  "targets": {
+    "ustrix-web": {
+      "hosting": {
+        "ustrix-dev-website": [
+          "ustrix-dev-website"
+        ],
+        "ustrix-prod-website": [
+          "ustrix-prod-website"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
